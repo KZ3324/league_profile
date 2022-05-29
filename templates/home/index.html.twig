@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Summoner{% endblock %}
+
+{% block body %}
+    {{form_start(form, {'action': path('app_afficher_profille'),'method':'GET','attr' : {'class' : 'd-flex position-absolute top-50 start-50 translate-middle'}})}}
+    {{form_row(form.sumonnerName, {'label' : false,'attr' : {'class' : 'form-control me-2','placeholder' : 'Votre nom de sumonner'}})}}
+    {{form_row(form.submit, {'type' : 'submit','attr' : {'class' : 'btn btn-outline-success'}})}}
+    {{form_end(form)}}
+</form>
+
+{% endblock %}
