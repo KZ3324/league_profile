@@ -23,9 +23,17 @@ class AfficherProfilleController extends AbstractController
 
         $dataMastaries = $callApiService->getChampionMasteries($req['id']);
 
-        $champion1 = $dataMastaries[0]['championId'];
-        $champion2 = $dataMastaries[1]['championId'];
-        $champion3 = $dataMastaries[2]['championId'];
+
+        // Récupérer le totaux points masteries 
+
+        $array_pts_masteries = [];
+        $i = 0;
+        foreach ($dataMastaries as $key => $value) {
+            $array_pts_masteries[$i] = $value['championPoints'];
+            $i++;
+        }
+
+        $ptsMasteries = array_sum($array_pts_masteries);
 
         // Récupérer les nom des champion par leur id
 
@@ -56,6 +64,7 @@ class AfficherProfilleController extends AbstractController
         return $this->render('afficher_profille/index.html.twig', [
             'name' => $name,
             'level' => $level,
+            'ptsmaitrise' =>  number_format($ptsMasteries),
             'dataMasteries' => $dataMastaries,
             'champion' => [
                 'premier' => [
