@@ -17,7 +17,6 @@ class AfficherProfilleController extends AbstractController
         // Requetes pour récupere informations du sumonner
 
         $req = $callApiService->getSumonnerInfo($name);
-        $level = $req['summonerLevel'];
 
         // Requetes pour informations champions masteries
 
@@ -30,42 +29,50 @@ class AfficherProfilleController extends AbstractController
 
         // Récupérer les nom des champion par leur id
 
-        $liste2 = $callApiService->listeAllChampions();
-
-        // dd($liste2);
+        $listeChampion = $this->listeAllChampions();
 
         // Récupérer les images des champions
 
-        $imagePremier = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" . str_replace("'",'',str_replace(' ', '', $liste2[$dataMastaries[0]['championId']])) . "_0.jpg";
-        $imageDeuxieme = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" . str_replace("'",'',str_replace(' ', '', $liste2[$dataMastaries[1]['championId']])) . "_0.jpg";
-        $imageTroisieme = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" . str_replace("'",'',str_replace(' ', '', $liste2[$dataMastaries[2]['championId']]))  . "_0.jpg";
-
-
-        // dd($dataMastaries[0]['championPoints']);
-
+        $imagePremier = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" . str_replace("'",'',str_replace(' ', '', $listeChampion[$dataMastaries[0]['championId']])) . "_0.jpg";
+        $imageDeuxieme = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" . str_replace("'",'',str_replace(' ', '', $listeChampion[$dataMastaries[1]['championId']])) . "_0.jpg";
+        $imageTroisieme = "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" . str_replace("'",'',str_replace(' ', '', $listeChampion[$dataMastaries[2]['championId']]))  . "_0.jpg";
 
         return $this->render('afficher_profille/index.html.twig', [
             'name' => $name,
-            'level' => $level,
+            'level' => $req['summonerLevel'],
             'ptsmaitrise' =>  number_format($ptsMasteries),
             'dataMasteries' => $dataMastaries,
             'champion' => [
                 'premier' => [
-                    'nom' => $liste2[$dataMastaries[0]['championId']],
+                    'nom' => $listeChampion[$dataMastaries[0]['championId']],
                     'masteries' => number_format($dataMastaries[0]['championPoints']),
                     'image' => $imagePremier
                 ],
                 'deuxieme' => [
-                    'nom' => $liste2[$dataMastaries[1]['championId']],
+                    'nom' => $listeChampion[$dataMastaries[1]['championId']],
                     'masteries' => number_format($dataMastaries[1]['championPoints']),
                     'image' => $imageDeuxieme
                 ],
                 'troisieme' => [
-                    'nom' => $liste2[$dataMastaries[2]['championId']],
+                    'nom' => $listeChampion[$dataMastaries[2]['championId']],
                     'masteries' => number_format($dataMastaries[2]['championPoints']),
                     'image' => $imageTroisieme
                 ],
             ],
         ]);
+        
+    }
+
+    public function listeAllChampions() {
+        $json = file_get_contents("http://ddragon.leagueoflegends.com/cdn/12.10.1/data/en_US/champion.json");
+        $list_json = json_decode($json, true)['data'];
+
+        $i = 0;
+        $liste = array();
+        foreach ($list_json as $key => $value) {
+            $liste[$value['key']] = $value['name'];
+            $i++;
+        }
+        return $liste;
     }
 }

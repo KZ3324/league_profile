@@ -49,18 +49,4 @@ class CallApiService
 
         return array_sum($array_pts_masteries);
     }
-
-    public function listeAllChampions() {
-        $json = file_get_contents("http://ddragon.leagueoflegends.com/cdn/12.10.1/data/en_US/champion.json");
-        $list = json_decode($json, true)['data'];
-
-        $i = 0;
-        $liste2 = array();
-        foreach ($list as $key => $value) {
-            $liste2[$value['key']] = $value['name'];
-            $i++;
-        }
-
-        return $liste2;
-    }
 }
