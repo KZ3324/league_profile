@@ -26,28 +26,11 @@ class AfficherProfilleController extends AbstractController
 
         // Récupérer le totaux points masteries 
 
-        $array_pts_masteries = [];
-        $i = 0;
-        foreach ($dataMastaries as $key => $value) {
-            $array_pts_masteries[$i] = $value['championPoints'];
-            $i++;
-        }
-
-        $ptsMasteries = array_sum($array_pts_masteries);
+        $ptsMasteries = $callApiService->getChampionMasteriesTotal($req['id']);
 
         // Récupérer les nom des champion par leur id
 
-        $json = file_get_contents("http://ddragon.leagueoflegends.com/cdn/12.10.1/data/en_US/champion.json");
-        $list = json_decode($json, true)['data'];
-
-        // dd($list);
-
-        $i = 0;
-        $liste2 = array();
-        foreach ($list as $key => $value) {
-            $liste2[$value['key']] = $value['name'];
-            $i++;
-        }
+        $liste2 = $callApiService->listeAllChampions();
 
         // dd($liste2);
 
