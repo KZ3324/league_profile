@@ -2,23 +2,25 @@
 
 namespace App\Service;
 
+use App\Api\LeagueApi;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class CallApiService
 {
     private $client;
+    private $leagueApi;
 
-    public function __construct(HttpClientInterface $client)
+    public function __construct(HttpClientInterface $client, LeagueApi $leagueApi)
     {
         $this->client = $client;
-        $this->key = "RGAPI-2392dd1e-7438-4d36-aa6b-eed9515181e6";
+        $this->leagueApi = $leagueApi;
     }
 
     public function getChampionData(): array
     {
         $response = $this->client->request(
             'GET',
-            'https://euw1.api.riotgames.com/lol/platform/v3/champion-rotations?api_key=' . $this->key . ''
+            'https://euw1.api.riotgames.com/lol/platform/v3/champion-rotations?api_key=' . $this->leagueApi->index() . ''
         );
 
         return $response->toArray();
@@ -26,14 +28,14 @@ class CallApiService
     public function getSumonnerInfo($id) : array {
         $response = $this->client->request(
             'GET',
-            'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' . $id . '?api_key=' . $this->key . ''
+            'https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' . $id . '?api_key=' . $this->leagueApi->index() . ''
         );
         return $response->toArray();
     }
     public function getChampionMasteries($id) : array {
         $response = $this->client->request(
             'GET',
-            'https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/' . $id . '?api_key=' . $this->key . ''
+            'https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/' . $id . '?api_key=' . $this->leagueApi->index() . ''
         );
         return $response->toArray();
     }
